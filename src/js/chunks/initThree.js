@@ -1,6 +1,12 @@
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { GUI } from 'dat.gui';
 
 const initThree = {
+	guiSettings: function () {
+		this.gui = new GUI();
+	},
+
 	sceneSettings: function () {
 		this.scene = new THREE.Scene();
 	},
@@ -63,34 +69,19 @@ const initThree = {
 		document.body.appendChild(this.renderer.domElement);
 	},
 
-	rotationAroundYAxes: function () {
-		let angle = 0.785398 * 1000;
-
-		const trackMovement = (e) => {
-			if (e.buttons === 1) {
-				angle += e.movementX;
-				const slowedMovement = angle * 0.001;
-
-				const newXCameraPosition = Math.sqrt(50) * Math.cos(slowedMovement);
-				const newZCameraPosition = Math.sqrt(50) * Math.sin(slowedMovement);
-
-				this.camera.position.x = newXCameraPosition;
-				this.camera.position.z = newZCameraPosition;
-				this.camera.lookAt(new THREE.Vector3(0, 0, 0));
-			}
-		};
-
-		document.addEventListener('mousemove', trackMovement);
+	controlSettings: function () {
+		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 	},
 
 	init: function () {
+		this.guiSettings();
 		this.sceneSettings();
 		this.cameraSettings();
 		this.lightSettings();
 		this.characterSettings();
 		this.groundSettings();
 		this.rendererSettings();
-		this.rotationAroundYAxes();
+		this.controlSettings();
 
 		function animate() {
 			requestAnimationFrame(animate);
